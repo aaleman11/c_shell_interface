@@ -11,8 +11,38 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 // maximum length of a command
 #define MAXLINE 80
+
+
+
+#define TOKEN_BUFFER_SIZE 80
+#define TOKEN_DELIMITER "\n"
+
+char **arg_parser(char *input)
+{
+    int bufferSize = TOKEN_BUFFER_SIZE, position = 0;
+
+    char **args = malloc(bufferSize * sizeof(char*));
+    char *arg;
+
+    arg = strtok(input, TOKEN_DELIMITER);
+    while (arg != NULL) {
+        args[position] = arg;
+        position++;
+
+        if (position >= bufferSize) {
+            bufferSize += TOKEN_BUFFER_SIZE;
+            args = realloc(arg, bufferSize * sizeof(char*));
+        }
+
+        arg = strtok(NULL, TOKEN_DELIMITER);
+    }
+    args[position] = NULL;
+    return args;
+}
+
 
 // checks if input contains &
 int containsAmp(char input[]) {
@@ -28,7 +58,11 @@ int containsAmp(char input[]) {
     return 0;
 }
 
+
+
+/*****************************************************
 //Parse user input
+
 int analyzeInput(char input[], char *args[]) {
     
     int index = -1;
@@ -67,13 +101,14 @@ int analyzeInput(char input[], char *args[]) {
     return 0;
     
 }
+************************************************************/
 
 
 
 int main(void) {
     
     char input[MAXLINE];            // inital input
-    char *args[MAXLINE/2 + 1];      // command line arguments
+    char **args;                    // command line arguments
     int should_run = 1;             // flag which quits the program
     pid_t pid = 0;                  // process id
     
@@ -95,12 +130,20 @@ int main(void) {
          * (3) if command included &, parent will invoke wait()
          
          */
-        
+
+
         // grabs in the input and the length of the input
         fgets(input, MAXLINE, stdin);
-        
+
+
+        /**************************
         // analyze the input first
         analyzeInput(input, args);
+
+         ***********************/
+
+        args = arg_parser(input);
+
 
         // create a new child process
         pid = fork();
