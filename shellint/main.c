@@ -40,6 +40,22 @@ char **arg_parser(char *input)
     return args;
 }
 
+void history(char **hist, int current){
+    //    int i = current;
+    //    int histNum = 1;
+    
+    //char *histA[MAXLINE];
+    //    free(histA);
+    
+    //    for(int temp = 0; temp < MAXLINE; temp++){
+    //      strcpy(histA, hist[1]);
+    //    }
+    //    while(1){
+    //        if(&hist){
+    //            printf("%d %s\n", histNum, &hist);
+    //            histNum++;
+    //        }
+    //    }
 
 // checks if input contains &
 int containsAmp(char input[]) {
