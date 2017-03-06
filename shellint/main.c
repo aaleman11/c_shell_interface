@@ -11,11 +11,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-
 // maximum length of a command
 #define MAXLINE 80
-
-
 
 #define TOKEN_BUFFER_SIZE 80
 #define TOKEN_DELIMITER "\n"
@@ -146,46 +143,46 @@ int main(void) {
 
 
         // create a new child process
-        pid = fork();
+	/* pid = fork(); */
         
         
-        // true: then we want child and parent to execute
-        // false: then we want the parent to wait for the child to execute
-        if (containsAmp(input)) {
+        /* // true: then we want child and parent to execute */
+        /* // false: then we want the parent to wait for the child to execute */
+        /* if (containsAmp(input)) { */
             
-            // executes if we're the child process
-            if (pid == 0) {
-                printf("1\n");
-                execvp(args[0], args);
-                exit(0);
-            }
-            // executes if we're the parent process
-            else if (pid > 0) {
-                printf("2\n");
-            }
-            // executes if we're the parent process, but child couldn't be created
-            else {
-                printf("3\n");
-            }
-        }
-        else {
+        /*     // executes if we're the child process */
+        /*     if (pid == 0) { */
+        /*         printf("1\n"); */
+        /*         execvp(args[0], args); */
+        /*         exit(0); */
+        /*     } */
+        /*     // executes if we're the parent process */
+        /*     else if (pid > 0) { */
+        /*         printf("2\n"); */
+        /*     } */
+        /*     // executes if we're the parent process, but child couldn't be created */
+        /*     else { */
+        /*         printf("3\n"); */
+        /*     } */
+        /* } */
+        /* else { */
             
-            // executes if we're the child process
-            if (pid == 0) {
-                printf("4\n");
-                execvp(args[0], args);
-                exit(0);
-            }
-            // executes if we're the parent process
-            else if (pid > 0) {
-                wait(NULL);
-                printf("5\n");
-            }
-            // executes if we're the parent process, but child couldn't be created
-            else {
-                printf("6\n");
-            }
-        }
+        /*     // executes if we're the child process */
+        /*     if (pid == 0) { */
+        /*         printf("4\n"); */
+        /*         execvp(args[0], args); */
+        /*         exit(0); */
+        /*     } */
+        /*     // executes if we're the parent process */
+        /*     else if (pid > 0) { */
+        /*         wait(NULL); */
+        /*         printf("5\n"); */
+        /*     } */
+        /*     // executes if we're the parent process, but child couldn't be created */
+        /*     else { */
+        /*         printf("6\n"); */
+        /*     } */
+	//        }
     }
     
     return 0;
