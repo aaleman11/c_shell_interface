@@ -11,8 +11,10 @@
 #define MAXLINE 80
 #define TOKEN_BUFFER_SIZE 80
 #define TOKEN_DELIMITER "\n"
+#define MAXHISTORY 10
 // keeps track of the last 10 history commands
-char history[10][MAXLINE];
+//char history[10][MAXLINE];
+
 char **arg_parser(char *input)
 {
     int bufferSize = TOKEN_BUFFER_SIZE, position = 0;
@@ -35,9 +37,7 @@ char **arg_parser(char *input)
     args[position] = NULL;
     return args;
 }
-void addHistory(char *input) {
-    
-}
+
 // checks if input contains &
 int containsAmp(char input[]) {
     
@@ -50,6 +50,19 @@ int containsAmp(char input[]) {
     }
     
     return 0;
+}
+
+void history(char *hist[], int current){
+  int i = current;
+  int hist_value = 1;
+
+  for(int counter = 0; counter < MAXHISTORY; counter++){
+    if(hist[--current] != NULL){
+      printf("%d. %s \n", hist_value, hist[current]);
+      hist_value++;
+    }
+  }
+  i = (i + 1) % MAXHISTORY;
 }
 // checks if command is a history command
 // return 1:  if command is: '!!'
@@ -95,10 +108,8 @@ void removeAmp(char* str) {
     }
     
     memmove(&str[indexToDelete], &str[indexToDelete + 1], strlen(str) - indexToDelete);
-    
-    
-    
-    //printf("%s", str);
+
+
     
 }
 // main function
@@ -108,6 +119,8 @@ int main(void) {
     char **args;                    // command line arguments
     int should_run = 1;             // flag which quits the program
     pid_t pid = 0;                  // process id
+    int counter = 0;
+    char *holder[MAXLINE/2 + 1];
     
     while (should_run) {
         
@@ -144,8 +157,11 @@ int main(void) {
         /*         should_run = 0; */
         /*         continue; */
         /* } */
-        
-        
+
+	//storing shit
+	holder[counter] = strdup(input);
+	counter++;
+	
         // create a new child process
         pid = fork();
         
@@ -202,6 +218,19 @@ int main(void) {
 
 	if(strcmp(input, "exit") == 0)
 	  break;
+	else if(strcmp(input, "history") == 0){
+	  //runs history
+	  history(holder, counter);
+	}
+	else if((strcmp(input, "!!") == 0) && counter == 1){
+	  printf("No Command in History! \n");
+	}
+	else if(strcmp(input, "!!") == 0){
+	  //execute last command
+	}
+	else if(strcmp(input, " ") || strcmp(input, "")){
+	  printf("There is no input or invalid input \n");
+	}
     }
     
     return 0;
