@@ -75,12 +75,6 @@ int containsAmp(char input[]) {
 /*              input[6] == 'y') { */
 /*         return -1; */
 /*     } */
-/*     else if (input[0] == 'e' && */
-/*              input[1] == 'x' && */
-/*              input[2] == 'i' && */
-/*              input[3] == 't' ) { */
-/*         return -2; */
-/*     } */
 /*     else { */
 /*         return 99; */
 /*     } */
@@ -202,6 +196,7 @@ int main(void) {
                 printf("Something went wrong.\n");
             }
         }
+	
 	if(input[strlen(input) - 1] == '\n')
 	  input[strlen(input) -1] = '\0';
 
