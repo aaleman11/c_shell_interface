@@ -72,12 +72,12 @@ int containsHistOrExit(char input[]) {
              input[6] == 'y') {
         return -1;
     }
-    else if (input[0] == 'e' &&
-             input[1] == 'x' &&
-             input[2] == 'i' &&
-             input[3] == 't' ) {
-        return -2;
-    }
+    /* else if (input[0] == 'e' && */
+    /*          input[1] == 'x' && */
+    /*          input[2] == 'i' && */
+    /*          input[3] == 't' ) { */
+    /*     return -2; */
+    /* } */
     else {
         return 99;
     }
@@ -129,9 +129,11 @@ void addHistory(char *input) {
 
 // prints out the entire history
 void printHistory() {
+  int k = 1;
     for (int i = 9; i >= 0; i--) {
         if (history[i][0] != '\0') {
-            printf("%i \t %s", i+1, history[i]);
+            printf("%i \t %s",k , history[i]);
+	    k++;
         }
     }
 }
@@ -151,7 +153,9 @@ int main(void) {
     char **args;                    // command line arguments
     int should_run = 1;             // flag which quits the program
     pid_t pid = 0;                  // process id
-    
+
+    char* array[80];
+    int counter = 0;
     while (should_run) {
         
         // prints the input command
@@ -165,7 +169,12 @@ int main(void) {
         
         // adds the input to the history
         addHistory(input);
-        
+
+	/* if(input[strlen(input) -1] == '\n') */
+	/*   input[strlen(input) -1 ] = '\0'; */
+	  
+	array[counter] = strdup(input);
+	counter++;
 //        printf("input before: %s", input);
         
         // if the command is a history command -- 4 scenarios
@@ -173,9 +182,8 @@ int main(void) {
                 
                 // executes if command is: '!!' -> execute most recent command
             case 1:
-                runHistory(input, 8);
+                runHistory(input, counter);
                 break;
-                
                 // executes if command is: '!N' -> execute Nth command
             case 0:
                 runHistory(input, input[1]-50);
@@ -185,11 +193,6 @@ int main(void) {
             case -1:
                 printHistory();
                 // return to the beginning of a while loop
-                continue;
-                
-                // execute if command is exit
-            case -2:
-                should_run = 0;
                 continue;
         }
         
@@ -234,12 +237,11 @@ int main(void) {
             
             // executes if we're the child process
             if (pid == 0) {
-                
                 execvp(args[0], args);
+		exit(0);
             }
             // executes if we're the parent process
             else if (pid > 0) {
-                
                 wait(NULL);
             }
             // executes if we're the parent process, but child couldn't be created
