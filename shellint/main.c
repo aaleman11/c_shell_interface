@@ -167,51 +167,51 @@ int main(void) {
         
         // true: then we want child and parent to execute
         // false: then we want the parent to wait for the child to execute
-        if (containsAmp(input)) {
+        /* if (containsAmp(input)) { */
             
-            // removes the '&' from the input
-            removeAmp(input);
+        /*     // removes the '&' from the input */
+        /*     removeAmp(input); */
             
-            // returns a set of arguments
-            args = arg_parser(input);
+        /*     // returns a set of arguments */
+        /*     args = arg_parser(input); */
             
-            // executes if we're the child process
-            if (pid == 0) {
-                //                execvp(args[0], args);
-                if (execvp(args[0], args) == -1)
-                {
-                    printf("Command not executed correctly.\n");
-                    exit(0);
-                }
+        /*     // executes if we're the child process */
+        /*     if (pid == 0) { */
+        /*         //                execvp(args[0], args); */
+        /*         if (execvp(args[0], args) == -1) */
+        /*         { */
+        /*             printf("Command not executed correctly.\n"); */
+        /*             exit(0); */
+        /*         } */
                 
-            }
-            // executes if we're the parent process
-            else if (pid > 0) {
-                // do nothing with the parent because we want them to run together
-            }
-            // executes if we're the parent process, but child couldn't be created
-            else {
-                printf("Something went wrong.\n");
-            }
-        }
-        else {
+        /*     } */
+        /*     // executes if we're the parent process */
+        /*     else if (pid > 0) { */
+        /*         // do nothing with the parent because we want them to run together */
+        /*     } */
+        /*     // executes if we're the parent process, but child couldn't be created */
+        /*     else { */
+        /*         printf("Something went wrong.\n"); */
+        /*     } */
+        /* } */
+        /* else { */
             
-            // returns a set of arguments
-            args = arg_parser(input);
+        /*     // returns a set of arguments */
+        /*     args = arg_parser(input); */
             
-            // executes if we're the child process
-            if (pid == 0) {
-                execvp(args[0], args);
-            }
-            // executes if we're the parent process
-            else if (pid > 0) {
-                wait(NULL);
-            }
-            // executes if we're the parent process, but child couldn't be created
-            else {
-                printf("Something went wrong.\n");
-            }
-        }
+        /*     // executes if we're the child process */
+        /*     if (pid == 0) { */
+        /*         execvp(args[0], args); */
+        /*     } */
+        /*     // executes if we're the parent process */
+        /*     else if (pid > 0) { */
+        /*         wait(NULL); */
+        /*     } */
+        /*     // executes if we're the parent process, but child couldn't be created */
+        /*     else { */
+        /*         printf("Something went wrong.\n"); */
+        /*     } */
+        /* } */
 	
 	if(input[strlen(input) - 1] == '\n')
 	  input[strlen(input) -1] = '\0';
@@ -228,8 +228,11 @@ int main(void) {
 	else if(strcmp(input, "!!") == 0){
 	  //execute last command
 	}
-	else if(strcmp(input, " ") || strcmp(input, "")){
+	else if(strcmp(input, " ")==0 || strcmp(input, "") == 0){
 	  printf("There is no input or invalid input \n");
+	}
+	else{
+	  //	  execvp(args[0], args);
 	}
     }
     
