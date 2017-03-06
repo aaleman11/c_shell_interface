@@ -178,22 +178,26 @@ int main(void) {
 //        printf("input before: %s", input);
         
         // if the command is a history command -- 4 scenarios
-        switch (containsHistOrExit(input)) {
-                
-                // executes if command is: '!!' -> execute most recent command
-            case 1:
-	      runHistory(input, 8);
-                break;
-                // executes if command is: '!N' -> execute Nth command
-            case 0:
-                runHistory(input, input[1]-50);
-                break;
-                
-                // executes if command is: 'history' -> print recent history to console
-            case -1:
-                printHistory();
-                // return to the beginning of a while loop
-                continue;
+	//	printf("%d\n", strcmp(input, array[counter]));
+
+	switch (containsHistOrExit(input)) {
+	  // executes if command is: '!!' -> execute most recent command
+	case 1:
+	  runHistory(input, 8);
+	  break;
+	  // executes if command is: '!N' -> execute Nth command
+	case 0:
+
+	  if(strcmp(input, array[--counter]) == 0){
+	    runHistory(input, --counter);
+	  }
+	  break;
+          
+	  // executes if command is: 'history' -> print recent history to console
+	case -1:
+	  printHistory();
+	  // return to the beginning of a while loop
+	  continue;
         }
         
 //        printf("input after:  %s", input);
