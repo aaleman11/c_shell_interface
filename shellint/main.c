@@ -20,20 +20,21 @@
 char **arg_parser(char *input)
 {
     int bufferSize = TOKEN_BUFFER_SIZE, position = 0;
-
+    
     char **args = malloc(bufferSize * sizeof(char*));
     char *arg;
-
+    
     arg = strtok(input, TOKEN_DELIMITER);
     while (arg != NULL) {
+        
         args[position] = arg;
         position++;
-
+        
         if (position >= bufferSize) {
             bufferSize += TOKEN_BUFFER_SIZE;
             args = realloc(arg, bufferSize * sizeof(char*));
         }
-
+        
         arg = strtok(NULL, TOKEN_DELIMITER);
     }
     args[position] = NULL;
@@ -55,7 +56,7 @@ void history(char **hist, int current){
     //            printf("%d %s\n", histNum, &hist);
     //            histNum++;
     //        }
-    //    }
+}
 
 // checks if input contains &
 int containsAmp(char input[]) {
@@ -71,53 +72,29 @@ int containsAmp(char input[]) {
     return 0;
 }
 
-
-
-/*****************************************************
-//Parse user input
-
-int analyzeInput(char input[], char *args[]) {
+// removes '&' from input
+// !!!!!!!!!!!!!!!!!!! this does not work correctly yet for some reason
+void removeAmp(char* str) {
     
-    int index = -1;
-    int count = 0;
+    //int currArrLen = sizeof(str) / sizeof(str[0]);
+    unsigned long len = strlen(str);
+    int indexToDelete;
+    int i = 0;
     
-    unsigned long length = strlen(input);
-    
-//    printf("%lu", length);
-    
-    for(int i = 0; i < length; i++) {
-        
-        switch(input[i]){
-            case ' ':
-                break;
-            case '\n':
-                if(index != -1){
-                    args[count] = &input[index];
-                    count++;
-                }
-                input[i] = '\0';
-//                args[count] = NULL;
-                break;
-            default:
-//                if(index == -1){
-                    index = i;
-//                }
-                
-//                if(input[i] == '&'){
-//                    input[i] = '\0';
-//                }
+    for(i = 0; i < len; i++) {
+        if(str[i] == '&') {
+            indexToDelete = i;
+            break;
         }
     }
     
+    memmove(&str[indexToDelete], &str[indexToDelete + 1], strlen(str) - indexToDelete);
     
-    
-    return 0;
-    
+    printf("%s", str);
+
 }
-************************************************************/
 
-
-
+// main function
 int main(void) {
     
     char input[MAXLINE];            // inital input
@@ -133,72 +110,59 @@ int main(void) {
         // flushes all output
         fflush(stdout);
         
-        // steps from CSNS
-        /** * After reading user input, the steps are:
-         
-         * (1) fork a child process using fork()
-         
-         * (2) the child process will invoke execvp()
-         
-         * (3) if command included &, parent will invoke wait()
-         
-         */
-
-
-        // grabs in the input and the length of the input
+        // gets the input
         fgets(input, MAXLINE, stdin);
-
-
-        /**************************
-        // analyze the input first
-        analyzeInput(input, args);
-
-         ***********************/
-
-        args = arg_parser(input);
-
-
+        
         // create a new child process
-	/* pid = fork(); */
+        pid = fork();
         
+        // true: then we want child and parent to execute
+        // false: then we want the parent to wait for the child to execute
+        if (containsAmp(input)) {
+            
+            // removes the '&' from the input
+            removeAmp(input);
+            
+            // returns a set of arguments
+            args = arg_parser(input);
         
-        /* // true: then we want child and parent to execute */
-        /* // false: then we want the parent to wait for the child to execute */
-        /* if (containsAmp(input)) { */
+            // executes if we're the child process
+            if (pid == 0) {
+//                execvp(args[0], args);
+                if (execvp(args[0], args) == -1)
+                {
+                    printf("Command not executed correctly.\n");
+                    exit(0);
+                }
+
+            }
+            // executes if we're the parent process
+            else if (pid > 0) {
+                // do nothing with the parent because we want them to run together
+            }
+            // executes if we're the parent process, but child couldn't be created
+            else {
+                printf("Something went wrong.\n");
+            }
+        }
+        else {
             
-        /*     // executes if we're the child process */
-        /*     if (pid == 0) { */
-        /*         printf("1\n"); */
-        /*         execvp(args[0], args); */
-        /*         exit(0); */
-        /*     } */
-        /*     // executes if we're the parent process */
-        /*     else if (pid > 0) { */
-        /*         printf("2\n"); */
-        /*     } */
-        /*     // executes if we're the parent process, but child couldn't be created */
-        /*     else { */
-        /*         printf("3\n"); */
-        /*     } */
-        /* } */
-        /* else { */
-            
-        /*     // executes if we're the child process */
-        /*     if (pid == 0) { */
-        /*         printf("4\n"); */
-        /*         execvp(args[0], args); */
-        /*         exit(0); */
-        /*     } */
-        /*     // executes if we're the parent process */
-        /*     else if (pid > 0) { */
-        /*         wait(NULL); */
-        /*         printf("5\n"); */
-        /*     } */
-        /*     // executes if we're the parent process, but child couldn't be created */
-        /*     else { */
-        /*         printf("6\n"); */
-        /*     } */
-	//        }
+            // returns a set of arguments
+            args = arg_parser(input);
+        
+            // executes if we're the child process
+            if (pid == 0) {
+                execvp(args[0], args);
+            }
+            // executes if we're the parent process
+            else if (pid > 0) {
+                wait(NULL);
+            }
+            // executes if we're the parent process, but child couldn't be created
+            else {
+                printf("Something went wrong.\n");
+            }
+        }
     }
     
     return 0;
