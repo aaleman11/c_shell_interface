@@ -1,11 +1,9 @@
-//
 //  main.c
 //  shellint
 //
 //  Created by Phillip Gulegin on 2/23/17.
 //  Copyright © 2017 Phillip Gulegin. All rights reserved.
 //
-
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -14,8 +12,8 @@
 #define MAXLINE 80
 #define TOKEN_BUFFER_SIZE 80
 #define TOKEN_DELIMITER "\n"
-
 // keeps track of the last 10 history commands
+
 char history[10][MAXLINE];
 
 char **arg_parser(char *input)
@@ -59,40 +57,43 @@ int containsAmp(char input[]) {
     return 0;
 }
 
+
+
 // checks if command is a history command
 // return 1:  if command is: '!!'
 // return 0:  command is: '!N'
 // return -1: command is: 'history'
 // return -2: command is: 'exit'
 // return 99: history is not the command
-int containsHistOrExit(char input[]) {
-    
-    if (input[0] == '!' && input[1] == '!') {
-        return 1;
-    }
-    else if (input[0] == '!' && (input[1] >= 48 && input[1] <= 57)) {
-        return 0;
-    }
-    // I know, I know... Lol.
-    else if (input[0] == 'h' &&
-             input[1] == 'i' &&
-             input[2] == 's' &&
-             input[3] == 't' &&
-             input[4] == 'o' &&
-             input[5] == 'r' &&
-             input[6] == 'y') {
-        return -1;
-    }
-    else if (input[0] == 'e' &&
-             input[1] == 'x' &&
-             input[2] == 'i' &&
-             input[3] == 't' ) {
-        return -2;
-    }
-    else {
-        return 99;
-    }
-}
+//
+//int containsHistOrExit(char input[]) {
+//    
+//    if (input[0] == '!' && input[1] == '!') {
+//        return 1;
+//    }
+//    else if (input[0] == '!' && (input[1] >= 48 && input[1] <= 57)) {
+//        return 0;
+//    }
+//    // I know, I know... Lol.
+//    else if (input[0] == 'h' &&
+//             input[1] == 'i' &&
+//             input[2] == 's' &&
+//             input[3] == 't' &&
+//             input[4] == 'o' &&
+//             input[5] == 'r' &&
+//             input[6] == 'y') {
+//        return -1;
+//    }
+//    else if (input[0] == 'e' &&
+//             input[1] == 'x' &&
+//             input[2] == 'i' &&
+//             input[3] == 't' ) {
+//        return -2;
+//    }
+//    else {
+//        return 99;
+//    }
+//}
 
 // removes '&' from input
 void removeAmp(char* str) {
@@ -102,6 +103,37 @@ void removeAmp(char* str) {
     int indexToDelete;
     int i = 0;
     
+
+/* int containsHistOrExit(char input[]) { */
+    
+/*     if (input[0] == '!' && input[1] == '!') { */
+/*         return 1; */
+/*     } */
+/*     else if (input[0] == '!' && (input[1] >= 48 && input[1] <= 57)) { */
+/*         return 0; */
+/*     } */
+/*     // I know, I know... Lol. */
+/*     else if (input[0] == 'h' && */
+/*              input[1] == 'i' && */
+/*              input[2] == 's' && */
+/*              input[3] == 't' && */
+/*              input[4] == 'o' && */
+/*              input[5] == 'r' && */
+/*              input[6] == 'y') { */
+/*         return -1; */
+/*     } */
+/*     else if (input[0] == 'e' && */
+/*              input[1] == 'x' && */
+/*              input[2] == 'i' && */
+/*              input[3] == 't' ) { */
+/*         return -2; */
+/*     } */
+/*     else { */
+/*         return 99; */
+/*     } */
+/* } */
+// removes '&' from input
+
     for(i = 0; i < len; i++) {
         if(str[i] == '&') {
             indexToDelete = i;
@@ -137,29 +169,55 @@ int main(void) {
         fgets(input, MAXLINE, stdin);
         
         // if the command is a history command -- 3 scenarios
-        switch (containsHistOrExit(input)) {
+
+//        switch (containsHistOrExit(input)) {
+//                
+//                // executes if command is: '!!' -> execute most recent command
+//            case 1:
+//                
+//                break;
+//                
+//                // executes if command is: '!N' -> execute Nth command
+//            case 0:
+//                
+//                break;
+//                
+//                // executes if command is: 'history' -> print recent history to console
+//            case -1:
+//                
+//                // return to the beginning of a while loop
+//                continue;
+//                
+//                // execute if command is exit
+//            case -2:
+//                should_run = 0;
+//                continue;
+//        }
+//=======
+        /* switch (containsHistOrExit(input)) { */
                 
-                // executes if command is: '!!' -> execute most recent command
-            case 1:
+        /*         // executes if command is: '!!' -> execute most recent command */
+        /*     case 1: */
                 
-                break;
+        /*         break; */
                 
-                // executes if command is: '!N' -> execute Nth command
-            case 0:
+        /*         // executes if command is: '!N' -> execute Nth command */
+        /*     case 0: */
                 
-                break;
+        /*         break; */
                 
-                // executes if command is: 'history' -> print recent history to console
-            case -1:
+        /*         // executes if command is: 'history' -> print recent history to console */
+        /*     case -1: */
                 
-                // return to the beginning of a while loop
-                continue;
+        /*         // return to the beginning of a while loop */
+        /*         continue; */
                 
-                // execute if command is exit
-            case -2:
-                should_run = 0;
-                continue;
-        }
+        /*         // execute if command is exit */
+        /*     case -2: */
+        /*         should_run = 0; */
+        /*         continue; */
+        /* } */
+
         
         
         // create a new child process
@@ -212,8 +270,13 @@ int main(void) {
                 printf("Something went wrong.\n");
             }
         }
+
+	if(input[strlen(input) - 1] == '\n')
+	  input[strlen(input) -1] = '\0';
+
+	if(strcmp(input, "exit") == 0)
+	  break;
     }
     
     return 0;
 }
-
