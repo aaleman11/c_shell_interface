@@ -182,7 +182,7 @@ int main(void) {
                 
                 // executes if command is: '!!' -> execute most recent command
             case 1:
-                runHistory(input, counter);
+	      runHistory(input, 8);
                 break;
                 // executes if command is: '!N' -> execute Nth command
             case 0:
