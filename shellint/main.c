@@ -11,11 +11,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-// maximum length of a command
 #define MAXLINE 80
-
 #define TOKEN_BUFFER_SIZE 80
 #define TOKEN_DELIMITER "\n"
+
+// keeps track of the last 10 history commands
+char history[10][MAXLINE];
 
 char **arg_parser(char *input)
 {
@@ -26,7 +27,6 @@ char **arg_parser(char *input)
     
     arg = strtok(input, TOKEN_DELIMITER);
     while (arg != NULL) {
-        
         args[position] = arg;
         position++;
         
@@ -41,21 +41,8 @@ char **arg_parser(char *input)
     return args;
 }
 
-void history(char **hist, int current){
-    //    int i = current;
-    //    int histNum = 1;
+void addHistory(char *input) {
     
-    //char *histA[MAXLINE];
-    //    free(histA);
-    
-    //    for(int temp = 0; temp < MAXLINE; temp++){
-    //      strcpy(histA, hist[1]);
-    //    }
-    //    while(1){
-    //        if(&hist){
-    //            printf("%d %s\n", histNum, &hist);
-    //            histNum++;
-    //        }
 }
 
 // checks if input contains &
@@ -72,8 +59,42 @@ int containsAmp(char input[]) {
     return 0;
 }
 
+// checks if command is a history command
+// return 1:  if command is: '!!'
+// return 0:  command is: '!N'
+// return -1: command is: 'history'
+// return -2: command is: 'exit'
+// return 99: history is not the command
+int containsHistOrExit(char input[]) {
+    
+    if (input[0] == '!' && input[1] == '!') {
+        return 1;
+    }
+    else if (input[0] == '!' && (input[1] >= 48 && input[1] <= 57)) {
+        return 0;
+    }
+    // I know, I know... Lol.
+    else if (input[0] == 'h' &&
+             input[1] == 'i' &&
+             input[2] == 's' &&
+             input[3] == 't' &&
+             input[4] == 'o' &&
+             input[5] == 'r' &&
+             input[6] == 'y') {
+        return -1;
+    }
+    else if (input[0] == 'e' &&
+             input[1] == 'x' &&
+             input[2] == 'i' &&
+             input[3] == 't' ) {
+        return -2;
+    }
+    else {
+        return 99;
+    }
+}
+
 // removes '&' from input
-// !!!!!!!!!!!!!!!!!!! this does not work correctly yet for some reason
 void removeAmp(char* str) {
     
     //int currArrLen = sizeof(str) / sizeof(str[0]);
@@ -90,8 +111,10 @@ void removeAmp(char* str) {
     
     memmove(&str[indexToDelete], &str[indexToDelete + 1], strlen(str) - indexToDelete);
     
-    printf("%s", str);
-
+    
+    
+    //printf("%s", str);
+    
 }
 
 // main function
@@ -113,6 +136,32 @@ int main(void) {
         // gets the input
         fgets(input, MAXLINE, stdin);
         
+        // if the command is a history command -- 3 scenarios
+        switch (containsHistOrExit(input)) {
+                
+                // executes if command is: '!!' -> execute most recent command
+            case 1:
+                
+                break;
+                
+                // executes if command is: '!N' -> execute Nth command
+            case 0:
+                
+                break;
+                
+                // executes if command is: 'history' -> print recent history to console
+            case -1:
+                
+                // return to the beginning of a while loop
+                continue;
+                
+                // execute if command is exit
+            case -2:
+                should_run = 0;
+                continue;
+        }
+        
+        
         // create a new child process
         pid = fork();
         
@@ -125,16 +174,16 @@ int main(void) {
             
             // returns a set of arguments
             args = arg_parser(input);
-        
+            
             // executes if we're the child process
             if (pid == 0) {
-//                execvp(args[0], args);
+                //                execvp(args[0], args);
                 if (execvp(args[0], args) == -1)
                 {
                     printf("Command not executed correctly.\n");
                     exit(0);
                 }
-
+                
             }
             // executes if we're the parent process
             else if (pid > 0) {
@@ -149,7 +198,7 @@ int main(void) {
             
             // returns a set of arguments
             args = arg_parser(input);
-        
+            
             // executes if we're the child process
             if (pid == 0) {
                 execvp(args[0], args);
